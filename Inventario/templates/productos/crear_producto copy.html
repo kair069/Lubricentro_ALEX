@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Producto</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+    {% load static %}
+    {% load crispy_forms_tags %}
+    <style>
+        body {
+            background-color: #f4f7fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        .custom-container {
+            max-width: 1300px; /* Ajusta este valor a lo que necesites */
+            margin: 0 auto; /* Centrar el contenedor */
+        }
+        h1 {
+            color: #343a40;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        .modal-header {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .modal-footer .btn {
+            margin-left: 10px;
+        }
+        .img-preview {
+            max-width: 400px; /* Tamaño más grande */
+            max-height: 400px; /* Tamaño más grande */
+            margin-top: 10px;
+            display: none;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .form-control {
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-text {
+            font-size: 0.875rem; /* Tamaño de fuente ligeramente más pequeño */
+            color: #6c757d; /* Color gris para el texto de ayuda */
+        }
+
+        .input-group-text {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        
+        .input-group-text:hover {
+            background-color: #0056b3;
+        }
+        
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-container mt-1">
+        <h1>Crear Nuevo Producto</h1>
+
+        <form method="POST" enctype="multipart/form-data" id="productosForms">
+            {% csrf_token %}
+            
+            <!-- Fila para nombre y marca -->
+<div class="form-row mb-4">
+    <div class="form-group col-md-6">
+        <label for="nombre" class="form-label text-primary">Nombre del Producto <i class="fas fa-box"></i></label>
+        {{ form.nombre|as_crispy_field }}
+    </div>
+    <div class="form-group col-md-6">
+        <label for="marca" class="form-label text-primary">Marca <i class="fas fa-tag"></i></label>
+        <div class="input-group">
+            {{ form.marca|as_crispy_field }}
+            <div class="input-group-append">
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#nuevaMarcaModal">
+                    + Añadir Marca
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fila para categoría y precio -->
+<div class="form-row mb-4">
+    <div class="form-group col-md-6">
+        <label for="categoria" class="form-label text-primary">Categoría <i class="fas fa-th-list"></i></label>
+        <div class="input-group">
+            {{ form.categoria|as_crispy_field }}
+            <div class="input-group-append">
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#nuevaCategoriaModal">
+                    + Añadir Categoría
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-md-6">
+        <label for="precio_venta" class="form-label text-primary">Precio de Venta <i class="fas fa-dollar-sign"></i></label>
+        {{ form.precio_venta|as_crispy_field }}
+    </div>
+</div>
+
+<!-- Fila para cantidad y stock -->
+<div class="form-row mb-4">
+    <div class="form-group col-md-6">
+        <label for="cantidad" class="form-label text-primary">Cantidad Disponible <i class="fas fa-cubes"></i></label>
+        <div class="input-group">
+            <input type="number" id="cantidad" name="cantidad" class="form-control" placeholder="Ej. 50 unidades" min="1" required aria-describedby="cantidadHelp">
+            <div class="input-group-append">
+                <span class="input-group-text" id="cantidadHelp" title="Número de unidades disponibles"><i class="fas fa-info-circle"></i></span>
+            </div>
+        </div>
+        <small class="form-text text-muted">Indica cuántas unidades están disponibles para la venta.</small>
+    </div>
+    <div class="form-group col-md-6">
+        <label for="stock" class="form-label text-primary">Stock Total <i class="fas fa-boxes"></i></label>
+        <div class="input-group">
+            <input type="number" id="stock" name="stock" class="form-control" placeholder="Ej. 100 unidades" min="0" required aria-describedby="stockHelp">
+            <div class="input-group-append">
+                <span class="input-group-text" id="stockHelp" title="Total de unidades en inventario"><i class="fas fa-info-circle"></i></span>
+            </div>
+        </div>
+        <small class="form-text text-muted">Indica la cantidad total de unidades en inventario.</small>
+    </div>
+</div>
+
+<!-- Descripción -->
+<div class="form-group mb-4">
+    <label for="descripcion" class="form-label text-primary">Descripción del Producto <i class="fas fa-pencil-alt"></i></label>
+    <textarea id="descripcion" name="descripcion" rows="4" class="form-control" placeholder="Ingresa una descripción detallada del producto..." required></textarea>
+    <small class="form-text text-muted">Proporciona detalles sobre las características, beneficios y uso del producto.</small>
+</div>
+
+<!-- Imagen con previsualización -->
+<div class="form-group mb-4">
+    <label for="imagen_url" class="form-label text-primary">Imagen del Producto <i class="fas fa-image"></i></label>
+    <div class="row">
+        <div class="col-md-6">
+            {{ form.imagen_url|as_crispy_field }}
+        </div>
+        <div class="col-md-6">
+            <img id="imgPreview" class="img-preview" src="" alt="Previsualización de la imagen" style="display: none; max-width: 100%;">
+        </div>
+    </div>
+</div>
+
+<!-- Botones de envío -->
+<!-- Botones de envío -->
+<div class="d-flex justify-content-between">
+    <button type="button" class="btn btn-primary" id="submitBtn" onclick="confirmSubmit()">Guardar Producto</button>
+    <button class="btn btn-secondary" id="loadingBtn" disabled style="display: none;">
+        <img src="https://codigofuente.io/wp-content/uploads/2018/09/progress.gif" alt="Cargando..." style="width: 20px; height: 20px;"/> Guardando...
+    </button>
+    <a href="{% url 'lista_productos' %}" class="btn btn-outline-secondary">Volver a la Lista</a>
+</div>
+
+        </form>
+    </div>
+
+    <!-- Modal para Nueva Marca -->
+    <div class="modal fade" id="nuevaMarcaModal" tabindex="-1" role="dialog" aria-labelledby="nuevaMarcaModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nuevaMarcaModalLabel">Añadir Nueva Marca</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="nuevaMarcaForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="nombre_marca">Nombre de la Marca</label>
+                            <input type="text" class="form-control" id="nombre_marca" name="nombre_marca" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Marca</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Nueva Categoría -->
+    <div class="modal fade" id="nuevaCategoriaModal" tabindex="-1" role="dialog" aria-labelledby="nuevaCategoriaModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nuevaCategoriaModalLabel">Añadir Nueva Categoría</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="nuevaCategoriaForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="nombre_categoria">Nombre de la Categoría</label>
+                            <input type="text" class="form-control" id="nombre_categoria" name="nombre_categoria" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Categoría</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro de que toda la información es correcta?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="confirmSubmit">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <script>
+        // Previsualización de la imagen
+        const imgInput = document.getElementById('id_imagen_url');
+        const imgPreview = document.getElementById('imgPreview');
+
+        imgInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                imgPreview.style.display = "block";
+                reader.onload = function(event) {
+                    imgPreview.setAttribute('src', event.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Indicador de progreso al enviar el formulario
+        const form = document.getElementById('productosForms');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingBtn = document.getElementById('loadingBtn');
+
+        form.addEventListener('submit', function() {
+            submitBtn.style.display = 'none';
+            loadingBtn.style.display = 'inline-block';
+        });
+
+        // Enviar formulario de nueva marca
+        $('#nuevaMarcaForm').on('submit', function(e) {
+            e.preventDefault();
+            const nombre_marca = $('#nombre_marca').val();
+            $.ajax({
+                url: "{% url 'crear_marca' %}",
+                method: "POST",
+                data: {
+                    'nombre_marca': nombre_marca,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function(data) {
+                    // Añadir nueva marca al select de marcas
+                    $('#id_marca').append(`<option value="${data.id}" selected>${data.nombre}</option>`);
+                    $('#nuevaMarcaModal').modal('hide');
+                },
+                error: function() {
+                    alert('Error al crear la nueva marca');
+                }
+            });
+        });
+
+        // Enviar formulario de nueva categoría
+        $('#nuevaCategoriaForm').on('submit', function(e) {
+            e.preventDefault();
+            const nombre_categoria = $('#nombre_categoria').val();
+            $.ajax({
+                url: "{% url 'crear_categoria' %}",
+                method: "POST",
+                data: {
+                    'nombre_categoria': nombre_categoria,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function(data) {
+                    // Añadir nueva categoría al select de categorías
+                    $('#id_categoria').append(`<option value="${data.id}" selected>${data.nombre}</option>`);
+                    $('#nuevaCategoriaModal').modal('hide');
+                },
+                error: function() {
+                    alert('Error al crear la nueva categoría');
+                }
+            });
+        });
+
+
+        
+
+    </script>
+    <script>
+        function confirmSubmit() {
+            // Muestra el modal de confirmación
+            $('#confirmModal').modal('show');
+        }
+    
+        // Al hacer clic en confirmar, se envía el formulario
+        document.getElementById('confirmSubmit').onclick = function() {
+            // Oculta el botón de guardar y muestra el botón de carga
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('loadingBtn').style.display = 'flex';
+    
+            // Envía el formulario después de un breve retraso para mostrar el ícono de carga
+            setTimeout(function() {
+                document.getElementById('submitBtn').closest('form').submit();
+            }, 1000); // Ajusta el tiempo de espera según sea necesario
+        };
+    </script>
+</body>
+</html>

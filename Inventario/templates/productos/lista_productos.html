@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .carousel-controls {
+            position: absolute;
+            width: 100%;
+            top: 50%; /* Centra verticalmente */
+            transform: translateY(-50%); /* Ajusta el desplazamiento */
+        }
+
+        .carousel-control-prev {
+            margin-left: -100px; /* Espacio desde el borde izquierdo */
+        }
+
+        .carousel-control-next {
+            margin-right: -100px; /* Espacio desde el borde derecho */
+        }
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-color: #000; /* Cambia el color de fondo de las flechas */
+            border-radius: 50%; /* Redondear las esquinas */
+            padding: 10px; /* Ajusta el tamaño del icono */
+        }
+    
+        .carousel-control-prev-icon::before, .carousel-control-next-icon::before {
+            color: white; /* Cambia el color de la flecha a blanco */
+            font-size: 20px;
+            content: '';
+        }
+    
+        .carousel-control-prev-icon {
+            background-image: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.svg#chevron-left');
+        }
+    
+        .carousel-control-next-icon {
+            background-image: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.svg#chevron-right');
+        }
+    
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .sidebar {
+            min-height: 100vh;
+            width: 250px; /* Aumentar el ancho del menú lateral */
+            background-color: #f8f9fa; /* Color de fondo claro */
+            color: #343a40; /* Texto oscuro */
+            border-right: 1px solid #dee2e6; /* Límite derecho */
+            padding: 15px; /* Espaciado interno */
+        }
+        .sidebar a {
+            color: #343a40; /* Color de texto de los enlaces */
+        }
+        .sidebar a:hover {
+            background-color: #e2e6ea; /* Color de fondo al pasar el mouse */
+            text-decoration: none; /* Sin subrayado */
+        }
+        .sidebar-heading {
+            padding: 10px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            background-color: #e9ecef; /* Fondo del encabezado */
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: none;
+        }
+        .card {
+            margin: 10px;
+            max-width: 300px; /* Tamaño máximo de la tarjeta */
+        }
+        .card img {
+            height: 200px; /* Altura fija para la imagen */
+            object-fit: cover; /* Ajuste de la imagen */
+        }
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            max-height: 70vh; /* Altura máxima del contenedor */
+            overflow-y: auto; /* Habilitar desplazamiento vertical */
+        }
+        .product-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Espaciado entre los elementos */
+            background-color: #f9f9f9; /* Fondo claro para destacar el contenido */
+            border: 1px solid #e0e0e0; /* Borde sutil */
+            border-radius: 8px; /* Bordes redondeados */
+            padding: 15px; /* Espaciado interno */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between; /* Espaciado entre etiqueta y valor */
+            padding: 5px 0; /* Espaciado interno */
+            font-family: Arial, sans-serif; /* Fuente clara */
+        }
+        
+        .detail-value {
+            font-weight: 500; /* Peso de fuente para el valor */
+            color: #333; /* Color de texto oscuro */
+        }
+        
+        .brand {
+            color: #007bff; /* Color azul para la marca */
+        }
+        
+        .category {
+            color: #6c757d; /* Color gris para la categoría */
+        }
+        
+        .price {
+            color: #28a745; /* Color verde para el precio */
+            font-weight: bold; /* Hacer el precio más prominente */
+        }
+        
+        .stock-item .detail-value {
+            font-weight: bold;
+            padding: 5px;
+            border-radius: 5px; /* Bordes redondeados */
+        }
+        
+        .stock {
+            color: #dc3545; /* Color rojo para el stock */
+        }
+        
+        .sae {
+            color: #17a2b8; /* Color cian para el SAE */
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div class="d-flex justify-content-between" style="width: 100%; max-width: 1800px; margin: auto;">
+        <!-- Menú lateral -->
+            <nav class="sidebar border-right">
+                <div class="sidebar-heading">
+                    Gestión de Productos
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'lista_productos' %}">
+                            <i class="fas fa-list"></i> Lista de Productos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'crear_producto' %}">
+                            <i class="fas fa-plus"></i> Crear Nuevo Producto
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'calcular_costo' %}">
+                            <i class="fas fa-calculator"></i> Calcular Costos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'analisis_costos' %}">
+                            <i class="fas fa-chart-bar"></i> Estadísticas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'estadisticas_inventario' %}">
+                            <i class="fas fa-warehouse"></i> Estadísticas Inventario
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="sidebar-heading recent-viewed">
+                    Productos Vistos Recientemente
+                </div>
+                <ul class="nav flex-column">
+                    {% for producto in productos_vistos %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'detalle_producto' producto.pk %}">
+                            <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" class="img-fluid"> {{ producto.nombre }}
+                        </a>
+                    </li>
+                    {% empty %}
+                    <li class="nav-item">
+                        <span class="nav-link">No has visto productos recientemente.</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+
+        <div class="container mt-5">
+            <h1 class="mb-4">Lista de Productos</h1>
+            
+            <!-- Mensajes de éxito y error -->
+            {% if messages %}
+            <div class="notification">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        
+            <!-- Formulario de búsqueda con filtros -->
+<!-- Tu template HTML -->
+<form method="GET" class="mb-4">
+    <div class="row g-2 align-items-center">
+        <div class="col-md-8">
+            <div class="input-group">
+                <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Buscar productos..." aria-label="Buscar productos">
+                <span class="input-group-text" id="basic-addon2">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-primary w-100" type="submit">Buscar</button>
+        </div>
+    </div>
+    <div class="row g-2 mt-3">
+        <div class="col-md-4">
+            <select name="marca" class="form-select">
+                <option value="">Seleccionar Marca</option>
+                {% for marca in marcas %}
+                <option value="{{ marca.id }}" {% if marca.id|stringformat:"s" == marca_id %}selected{% endif %}>{{ marca.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <select name="categoria" class="form-select">
+                <option value="">Seleccionar Categoría</option>
+                {% for categoria in categorias %}
+                <option value="{{ categoria.id }}" {% if categoria.id|stringformat:"s" == categoria_id %}selected{% endif %}>{{ categoria.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <input type="text" name="sae" value="{{ sae }}" class="form-control" placeholder="Buscar SAE...">
+        </div>
+        <div class="col-md-4">
+            <input type="number" name="precio_min" value="{{ precio_min }}" class="form-control" placeholder="Precio Mínimo">
+        </div>
+        <div class="col-md-4">
+            <input type="number" name="precio_max" value="{{ precio_max }}" class="form-control" placeholder="Precio Máximo">
+        </div>
+    </div>
+</form>
+
+
+
+        
+            <h2 class="text-center my-4">Productos Disponibles</h2>
+
+<div id="productCarousel" class="carousel slide" data-ride="carousel" data-interval="3000"> <!-- auto deslizable -->
+    <div class="carousel-inner">
+        {% for producto in productos %}
+        {% if forloop.counter0|divisibleby:4 %} <!-- Inicia una nueva fila por cada 4 productos -->
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <div class="row justify-content-center">
+        {% endif %}
+
+                <div class="col-md-3">
+                    <div class="card mx-auto" style="max-width: 900px;">
+                        <img src="{{ producto.imagen_url }}" class="card-img-top" alt="{{ producto.nombre }}" data-bs-toggle="modal" data-bs-target="#imageModal">
+
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">{{ producto.nombre }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="{{ producto.imagen_url }}" class="img-fluid" alt="{{ producto.nombre }}">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ producto.nombre }}</h5>
+                            <p class="card-text">
+                                <div class="product-details">
+                                    <div class="detail-item">
+                                        <strong>Marca:</strong> <span class="detail-value brand">{{ producto.marca.nombre }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Categoría:</strong> <span class="detail-value category">{{ producto.categoria.nombre }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Precio:</strong> <span class="detail-value price">${{ producto.precio_venta }}</span>
+                                    </div>
+                                    <div class="detail-item stock-item">
+                                        <strong>Stock:</strong> <span class="detail-value stock">{{ producto.stock }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Sae:</strong> <span class="detail-value sae">{{ producto.sae }}</span>
+                                    </div>
+                                </div>
+                            </p>
+                            
+                            
+                            <div class="text-center">
+                                <a href="{% url 'detalle_producto' producto.pk %}" class="btn btn-info">Ver Detalles</a>
+                                <a href="{% url 'actualizar_producto' producto.pk %}" class="btn btn-warning">Editar</a>
+                                <a href="{% url 'eliminar_producto' producto.pk %}" class="btn btn-danger">Eliminar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        {% if forloop.counter0|add:1|divisibleby:4 or forloop.last %} <!-- Cierra la fila después de cada 4 productos o al final -->
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br><br>
+        <br>
+        <br>    
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if query %}&q={{ query }}{% endif %}{% if marca_id %}&marca={{ marca_id }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}{% if precio_min %}&precio_min={{ precio_min }}{% endif %}{% if precio_max %}&precio_max={{ precio_max }}{% endif %}" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if marca_id %}&marca={{ marca_id }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}{% if precio_min %}&precio_min={{ precio_min }}{% endif %}{% if precio_max %}&precio_max={{ precio_max }}{% endif %}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+        
+                {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if marca_id %}&marca={{ marca_id }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}{% if precio_min %}&precio_min={{ precio_min }}{% endif %}{% if precio_max %}&precio_max={{ precio_max }}{% endif %}">{{ num }}</a>
+                    </li>
+                {% endfor %}
+        
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if marca_id %}&marca={{ marca_id }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}{% if precio_min %}&precio_min={{ precio_min }}{% endif %}{% if precio_max %}&precio_max={{ precio_max }}{% endif %}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}{% if marca_id %}&marca={{ marca_id }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}{% if precio_min %}&precio_min={{ precio_min }}{% endif %}{% if precio_max %}&precio_max={{ precio_max }}{% endif %}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Controles del carrusel -->
+    <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Anterior</span>
+    </a>
+    <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Siguiente</span>
+    </a>
+</div>
+
+<!-- Agregar los scripts de Bootstrap si no están incluidos ya -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap Bundle con Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+        </div>
+    </div>
+    <!-- Paginación -->
+
+    <!-- Scripts para mostrar notificaciones -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const notification = document.querySelector('.notification');
+            if (notification) {
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 5000); // Ocultar después de 5 segundos
+            }
+        });
+    </script>
+</body>
+</html>

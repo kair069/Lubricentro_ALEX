@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas de Inventario</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .kpi-card {
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Análisis de Costos</h1>
+
+        <div class="row">
+            <!-- Precio de Venta Total -->
+            <div class="col-md-3">
+                <div class="card kpi-card text-white bg-success mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Precio de Venta Total</h5>
+                        <p class="card-text" id="precio-venta-total">$0.00</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Stock Total -->
+            <div class="col-md-3">
+                <div class="card kpi-card text-white bg-info mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Stock Total</h5>
+                        <p class="card-text" id="stock-total">0</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Precio de Venta por Stock Total -->
+            <div class="col-md-3">
+                <div class="card kpi-card text-white bg-warning mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Precio de Venta por Stock</h5>
+                        <p class="card-text" id="precio-venta-stock">$0.00</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Inversión Total -->
+            <div class="col-md-3">
+                <div class="card kpi-card text-white bg-danger mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Inversión Total</h5>
+                        <p class="card-text" id="inversion-total">$0.00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Total de Costos de Aceite de Motor -->
+            <div class="col-md-3">
+                <div class="card kpi-card text-white bg-primary mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Total de Costos (Aceite de Motor)</h5>
+                        <p class="card-text" id="costo-total">$0.00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1>Gráficas de Inventario</h1>
+
+    <h2>Ventas por Marca</h2>
+    <img src="data:image/png;base64,{{ img_str }}" alt="Gráfico de Ventas por Marca">
+
+    <h2>Distribución de Productos por Categoría</h2>
+    <img src="data:image/png;base64,{{ img_str_categoria }}" alt="Gráfico de Distribución de Productos">
+
+    <h2>Tendencia de Stock de Productos</h2>
+    <img src="data:image/png;base64,{{ img_str_stock }}" alt="Gráfico de Tendencia de Stock">
+
+    <script>
+        // Simulación de datos
+        const productos = [
+            { nombre: "Aceite Motor A", precio_venta: 50.00, stock: 20, precio_costo: 30.00 },
+            { nombre: "Aceite Motor B", precio_venta: 70.00, stock: 15, precio_costo: 45.00 },
+            // Agrega más productos según sea necesario
+        ];
+
+        let precioVentaTotal = 0;
+        let stockTotal = 0;
+        let inversionTotal = 0;
+        let costoTotal = 0;
+
+        productos.forEach(producto => {
+            precioVentaTotal += producto.precio_venta * producto.stock;
+            stockTotal += producto.stock;
+            inversionTotal += producto.precio_costo * producto.stock;
+            if (producto.nombre.includes("Aceite Motor")) {
+                costoTotal += producto.precio_costo * producto.stock;
+            }
+        });
+
+        // Actualizar los elementos de la interfaz
+        document.getElementById('precio-venta-total').textContent = `$${precioVentaTotal.toFixed(2)}`;
+        document.getElementById('stock-total').textContent = stockTotal;
+        document.getElementById('precio-venta-stock').textContent = `$${(precioVentaTotal / stockTotal).toFixed(2)}`;
+        document.getElementById('inversion-total').textContent = `$${inversionTotal.toFixed(2)}`;
+        document.getElementById('costo-total').textContent = `$${costoTotal.toFixed(2)}`;
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Producto: {{ producto.nombre }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .img-preview {
+            max-width: 30%; /* Cambia este valor según sea necesario (por ejemplo, 50%) */
+            height: auto; /* Mantiene la relación de aspecto de la imagen */
+        }
+        .form-row {
+            margin-bottom: 1rem; /* Espaciado entre filas del formulario */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Actualizar Producto: {{ producto.nombre }}</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ form.nombre.label }} {{ form.nombre }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.marca.label }} {{ form.marca }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ form.categoria.label }} {{ form.categoria }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.tipo_motor.label }} {{ form.tipo_motor }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ form.sae.label }} {{ form.sae }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.tipo_filtro.label }} {{ form.tipo_filtro }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="id_imagen_url">Imagen URL:</label>
+                    <input type="text" class="form-control" name="imagen_url" id="id_imagen_url" value="{{ producto.imagen_url }}">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Vista Previa de la Imagen:</label><br>
+                    <img src="{{ producto.imagen_url }}" alt="Vista previa de la imagen" class="img-preview">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ form.cantidad.label }} {{ form.cantidad }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.precio_venta.label }} {{ form.precio_venta }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ form.stock.label }} {{ form.stock }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.tipo_envase.label }} {{ form.tipo_envase }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ form.precio_costo.label }} {{ form.precio_costo }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form.descripcion.label }} {{ form.descripcion }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Actualizar Producto</button>
+            <a href="{% url 'lista_productos' %}" class="btn btn-secondary">Volver a la Lista</a>
+        </form>
+    </div>
+</body>
+</html>

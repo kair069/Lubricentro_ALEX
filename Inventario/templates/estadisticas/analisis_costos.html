@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Costos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Análisis de Costos</h1>
+
+        <h3>Total Costos: {{ total_costos|floatformat:2 }}</h3>
+        <h3>Total Ventas: {{ total_ventas|floatformat:2 }}</h3>
+        <h3>Margen de Ganancia: {{ margen_ganancia|floatformat:2 }}</h3>
+
+        <h4>Lista de Productos</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Marca</th>
+                    <th>Precio Costo</th>
+                    <th>Precio Venta</th>
+                    <th>Cantidad en Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.marca }}</td>
+                    <td>{{ producto.precio_costo|floatformat:2 }}</td>
+                    <td>{{ producto.precio_venta|floatformat:2 }}</td>
+                    <td>{{ producto.stock }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
