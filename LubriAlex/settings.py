@@ -81,7 +81,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'lubrion',  # Cambia esto por el nombre de tu base de datos
+        'NAME': 'lubrio',  # Cambia esto por el nombre de tu base de datos
         'USER': 'root',            # Cambia esto por tu nombre de usuario MySQL
         'PASSWORD': '1234',     # Cambia esto por tu contraseña MySQL
         'HOST': 'localhost',                   # O la dirección de tu servidor de base de datos
