@@ -1,0 +1,19 @@
+<!-- templates/clientes/cliente_list.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Clientes</title>
+</head>
+<body>
+    <h1>Lista de Clientes</h1>
+    <a href="{% url 'cliente_create' %}">Agregar Nuevo Cliente</a>
+    <ul>
+        {% for cliente in clientes %}
+            <li>{{ cliente.nombre }} - {{ cliente.email }} {{ cliente.dni }} {{ cliente.imagen }}</li>
+        {% empty %}
+            <li>No hay clientes registrados.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
