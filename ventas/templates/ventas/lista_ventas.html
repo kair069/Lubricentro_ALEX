@@ -1,0 +1,33 @@
+<!-- ventas/templates/ventas/lista_ventas.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Ventas</title>
+</head>
+<body>
+    <h1>Lista de Ventas</h1>
+    <table>
+        <tr>
+            <th>Cliente</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Total</th>
+            <th>Fecha</th>
+        </tr>
+        {% for venta in ventas %}
+        <tr>
+            <td>{{ venta.cliente.nombre }}</td>
+            <td>{{ venta.producto.nombre }}</td>
+            <td>{{ venta.cantidad }}</td>
+            <td>{{ venta.precio_unitario }}</td>
+            <td>{{ venta.total_venta }}</td>
+            <td>{{ venta.fecha_venta }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'agregar_venta' %}">Agregar Nueva Venta</a>
+</body>
+</html>

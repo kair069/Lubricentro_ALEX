@@ -14,18 +14,18 @@ class Cliente(models.Model):
     def clean(self):
         # Validación del teléfono
         if self.telefono and not self.telefono.isdigit():
-            raise ValidationError('El teléfono debe contener solo dígitos.')
+            raise ValidationError('El teléfono debe contener solo dígitos.') # type: ignore
 
         # Validación del DNI
         if not self.dni.isalnum() or len(self.dni) < 8:
-            raise ValidationError('El DNI debe contener al menos 8 caracteres alfanuméricos.')
+            raise ValidationError('El DNI debe contener al menos 8 caracteres alfanuméricos.') # type: ignore
 
         # Validación de la imagen
         if self.imagen:
             file_extension = self.imagen.name.split('.')[-1].lower()
             valid_extensions = ['jpg', 'jpeg', 'png', 'gif']
             if file_extension not in valid_extensions:
-                raise ValidationError('La imagen debe ser de tipo JPG, JPEG, PNG o GIF.')
+                raise ValidationError('La imagen debe ser de tipo JPG, JPEG, PNG o GIF.') # type: ignore
 
 
 

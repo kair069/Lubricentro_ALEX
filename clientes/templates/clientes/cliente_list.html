@@ -1,19 +1,113 @@
-<!-- templates/clientes/cliente_list.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Clientes</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        h1 {
+            font-weight: bold;
+            color: #343a40;
+        }
+        .table {
+            animation: fadeIn 1s ease-in-out;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-sm {
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-sm:hover {
+            transform: scale(1.05);
+        }
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Lista de Clientes</h1>
-    <a href="{% url 'cliente_create' %}">Agregar Nuevo Cliente</a>
-    <ul>
-        {% for cliente in clientes %}
-            <li>{{ cliente.nombre }} - {{ cliente.email }} {{ cliente.dni }} {{ cliente.imagen }}</li>
-        {% empty %}
-            <li>No hay clientes registrados.</li>
-        {% endfor %}
-    </ul>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Lista de Clientes</h1>
+            <a href="{% url 'cliente_create' %}" class="btn btn-primary btn-lg">Agregar Cliente <i class="fas fa-plus-circle"></i></a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Imagen</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col">DNI</th>
+                            <th scope="col">Fecha de Registro</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in clientes %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>
+                                    {% if cliente.imagen %}
+                                        <img src="{{ cliente.imagen.url }}" class="img-thumbnail" style="width: 80px;" alt="Imagen de {{ cliente.nombre }}">
+                                    {% else %}
+                                        <span class="text-muted">Sin imagen</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ cliente.nombre }}</td>
+                                <td>{{ cliente.email }}</td>
+                                <td>{{ cliente.telefono|default:"N/A" }}</td>
+                                <td>{{ cliente.direccion|default:"N/A" }}</td>
+                                <td>{{ cliente.dni }}</td>
+                                <td>{{ cliente.fecha_registro|date:"d M Y H:i" }}</td>
+                                <td>
+                                    <a href="{% url 'cliente_update' cliente.pk %}" class="btn btn-sm btn-warning" title="Editar"><i class="fas fa-edit"></i></a>
+                                    <a href="{% url 'cliente_delete' cliente.pk %}" class="btn btn-sm btn-danger" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="9" class="text-center">No hay clientes registrados.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

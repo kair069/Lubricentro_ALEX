@@ -40,10 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Inventario',
     'clientes',
-
+    'ventas',
     # 'django_select2',
     'crispy_forms',
     'crispy_bootstrap4',
+    # creamos el home
+    'home',
+
 ]
 
 MIDDLEWARE = [
@@ -54,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',  # Asegúrate de que esta línea esté presente
 ]
 
 ROOT_URLCONF = 'LubriAlex.urls'
@@ -147,3 +152,16 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Directorio donde Django recolectará todos los archivos estáticos (para producción)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+
+
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
